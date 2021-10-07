@@ -9,12 +9,9 @@
 <div>
     <h1>Frame Price Estimator</h1>
     <?php
-
     $width = isset($_POST["width"]) ? $_POST["width"] : 0;
     $height = isset($_POST["height"]) ? $_POST["height"] : 0;
-    $area = ($width/1000) * ($height/1000); // divide by 1000 to convert to metres
-    $price = ($area * $area) + (100*$area) + 6;
-    $priceTo2dec = round($price,2);
+
 
     if(empty($width) || empty($height)) {//conditions for erroneous submission
         //Need to output the form
@@ -24,14 +21,17 @@
         ?>
         <form action="framing.php" method="post">
             <p>Please enter your photo sizes to get a framing cost estimate.</p>
-            <p>Photo Width: <input type="number" name="width" min = "1"/> </p>
+            <p>Photo Width: <input type="number" name="width" min = "1" /> </p>
             <p>Photo Height: <input type="number" name="height" min = "1"/> </p>
             <p><input type="submit"/> </p>
         </form>
         <?php
-    } else
-
-        echo "Your frame will cost £$priceTo2dec";
+    } else {
+        $area = ($width/1000) * ($height/1000);      // divide by 1000 to convert to metres
+        $price = ($area * $area) + (100*$area) + 6;
+        $priceTo2dec = round($price,2);
+        echo "<p>Your frame will cost £$priceTo2dec</p>";
+    }
     ?>
 
 </div>
