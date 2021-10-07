@@ -2,9 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test Page</title>
+    <meta name = "viewport" content="width-device-width, initial-scale=1.0">
+    <title>Framing System</title>
 </head>
 <body>
-<p> Hello There</p>
+<div>
+    <h1>Frame Price Estimator</h1>
+    <form action="framing.php" method="post">
+        <p>Please enter your photo sizes to get a framing cost estimate.</p>
+        <p>Photo Width: <input type="number" name="width" min="1"/>  </p>
+        <p>Photo Height: <input type="number" name="height" min = "1"/>  </p>
+        <p><input type="submit"/> </p>
+    </form>
+</div>
 </body>
 </html>
