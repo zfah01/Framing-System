@@ -10,8 +10,33 @@
     <h1>Frame Price Estimator</h1>
     <form action="framing.php" method="post">
         <p>Please enter your photo sizes to get a framing cost estimate.</p>
-        <p>Photo Width: <input type="number" name="width" min="1"/>  </p>
-        <p>Photo Height: <input type="number" name="height" min = "1"/>  </p>
+        <p>Photo Width: <label>
+            <input type="text" name="width"/>
+        </label>
+            <label>
+                <select name="units">
+                <option selected value="mm">mm</option>
+                <option value="cm">cm</option>
+                <option value="inches">inches</option>
+            </select>
+            </label></p>
+        <p>Photo Height: <label>
+            <input type="text" name="height"/>
+        </label></p>
+        <p>Postage:
+            <label>
+                <input type="radio" name="postage" value="Economy" checked>
+            </label> Economy
+            <label>
+                <input type="radio" name="postage" value="Rapid">
+            </label> Rapid
+            <label>
+                <input type="radio" name="postage" value="Next Day">
+            </label> Next Day
+            </p>
+        <p><label>
+            <input type="checkbox" name="vat" value="yes" checked>
+        </label> Include VAT in price</p>
         <p><input type="submit"/> </p>
     </form>
 </div>
