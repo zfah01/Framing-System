@@ -54,6 +54,19 @@
     $totalCost = $price + $postageCost;
     $totalCostWithVAT = round(($totalCost * 0.2) + $totalCost,2);
     echo "<p>Your frame will cost £$price plus $postage postage of £$postageCost giving a total price of £$totalCostWithVAT including VAT.</p>";
+
+    $email = $_POST["email"];
+    $msg = " Thanks for placing your order
+     'Your frame will cost £$price plus $postage postage of £$postageCost giving a total price of £$totalCostWithVAT including VAT.'
+     
+     Here is the link to our website: https://devweb2021.cis.strath.ac.uk/~wsb19173/xtpqzywxrfxhkhg/index.html";
+
+    // use wordwrap() if lines are longer than 70 characters
+    $msg = wordwrap($msg,70);
+
+    // send email
+    mail($email,"Thanks for your order",$msg);
+
     ?>
 
 </div>
