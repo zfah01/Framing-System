@@ -11,34 +11,36 @@
     <form action="framing.php" method="post">
         <p>Please enter your photo sizes to get a framing cost estimate.</p>
         <p>Photo Width: <label>
-            <input type="text" name="width"/>
+            <input type="text" name="width" value=""/>
         </label>
             <label>
                 <select name="units">
-                <option selected value="mm">mm</option>
-                <option value="cm">cm</option>
-                <option value="inches">inches</option>
-            </select>
+                    <option value="" selected disabled>Select</option>
+                    <option selected value="mm" >mm </option>
+                    <option value="cm">cm</option>
+                    <option value="inches">inches</option>
+                </select>
             </label></p>
         <p>Photo Height: <label>
-            <input type="text" name="height"/>
+            <input type="text" name="height" value=""/>
         </label></p>
         <p>Postage:
             <label>
-                <input type="radio" name="postage" value="economy" checked>
+                <input type="radio" id="economy" name="postage" value="economy" checked>
             </label> Economy
             <label>
-                <input type="radio" name="postage" value="rapid">
+                <input type="radio" id="rapid" name="postage" value="rapid">
             </label> Rapid
             <label>
-                <input type="radio" name="postage" value="next day">
+                <input type="radio" id="next day" name="postage" value="next day">
             </label> Next Day
-            </p>
+        </p>
         <p><label>
-            <input type="checkbox" name="vat" value="yes" checked>
+            <input type="checkbox" name="vat" value="yes" checked/>
         </label> Include VAT in price</p>
+        <p>Please enter your email to receive a quote.</p>
         <p>Email: <label>
-            <input type="text" name="email">
+            <input type="text" name="email" value="">
         </label></p>
         <p><input type="submit"/> </p>
     </form>
