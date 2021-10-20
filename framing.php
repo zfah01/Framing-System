@@ -3,18 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name = "viewport" content="width-device-width, initial-scale=1.0">
-    <title>Framing System</title>
+    <title>Frame Price Estimator</title>
 </head>
 <body>
 <div>
     <h1>Frame Price Estimator</h1>
     <?php
-    $width = strip_tags(isset($_POST["width"]) ? $_POST["width"] : "");
-    $height = strip_tags(isset($_POST["height"]) ? $_POST["height"] : "");
-    $units  = isset($_POST["units"]) ? $_POST["units"] : "";
-    $email = strip_tags(isset($_POST["email"]) ? $_POST["email"] : "");
-    $postage = isset($_POST["postage"]) ? $_POST["postage"] : "";
-    $error="";
+        require_once "/home/wsb19173/DEVWEB/2021/xtpqzywxrfxhkhg/password.php";
+        //connect to MySQL
+        $host = "devweb2021.cis.strath.ac.uk";
+        $username="wsb19173";
+        $pass = get_password();
+        $dbname="wsb19173";
+        $conn= new mysqli($host,$username,$pass,$dbname);
+
+        if($conn->connect_error){
+            die("Connection failed :".$conn->connect_error); //FIXME remove once working
+        }
+
+        $width = strip_tags(isset($_POST["width"]) ? $_POST["width"] : "");
+        $height = strip_tags(isset($_POST["height"]) ? $_POST["height"] : "");
+        $units  = isset($_POST["units"]) ? $_POST["units"] : "";
+        $email = strip_tags(isset($_POST["email"]) ? $_POST["email"] : "");
+        $postage = isset($_POST["postage"]) ? $_POST["postage"] : "";
+        $error="";
+        $optIn = isset($_POST["optIn"]) ? $_POST["optIn"] : "";
     ?>
     <form action="framing.php" method="post">
         <p>Please enter your photo sizes to get a framing cost estimate.</p>
@@ -34,13 +47,13 @@
             </label></p>
         <p>Postage:
             <label>
-                <input type="radio" id="economy" name="postage" value="economy" checked <?php if($postage==="economy"){?> checked="checked"<?php };?>>
+                <input type="radio" id="economy" name="postage" value="Economy" checked <?php if($postage==="Economy"){?> checked="checked"<?php };?>>
             </label> Economy
             <label>
-                <input type="radio" id="rapid" name="postage" value="rapid"<?php if($postage==="rapid"){?> checked="checked"<?php };?>>
+                <input type="radio" id="rapid" name="postage" value="Rapid"<?php if($postage==="Rapid"){?> checked="checked"<?php };?>>
             </label> Rapid
             <label>
-                <input type="radio" id="next day" name="postage" value="next day"<?php if($postage==="next day"){?> checked="checked"<?php };?>>
+                <input type="radio" id="next day" name="postage" value="Next Day"<?php if($postage==="Next Day"){?> checked="checked"<?php };?>>
             </label> Next Day
         </p>
         <p><label>
@@ -50,6 +63,8 @@
         <p>Email: <label>
                 <input type="text" name="email" value="<?php echo $email;?>">
             </label></p>
+        <p>Receive mail and future information about my framing calculation <label>
+                <input type = "checkbox" name="optIn" id="optIn" value="optIn"<?php if($optIn==="optIn"){?> checked="checked"<?php };?>></label></p>
         <p><input type="submit"/> </p>
     </form>
     <?php
@@ -61,6 +76,8 @@
         //check if email is valid
         if ($email != "") {
             $error = checkEmail($error, $email);
+        } elseif($optIn != ""){
+            $error = checkIfEmpty($error,$email,"Email");
         }
 
         //if no error perform calculations
@@ -73,10 +90,12 @@
             $area = $width * $height;
             $price = number_format((float)(($area * $area) + (100 * $area) + 6), 2, '.', ',');
             $postageCost = number_format((float)calculatePostage($longestEdge, $postage), 2, '.', ',');
-            $totalCost = $price +$postageCost ;
-            $totalCostWithVAT = number_format((float)(($totalCost * 0.2)+$totalCost), 2, '.', ',');
 
-            if ($email != "") {
+            $totalCost = $price + $postageCost;
+
+            $totalCostWithVAT = number_format((float)(($totalCost * 0.2) + $totalCost), 2, '.', ',');
+
+            if ($optIn === "optIn" && $email != "") {
 
                 $msg = " Thanks for placing your order
         ' Your frame will cost £$price plus $postage postage of £$postageCost giving a total price of £$totalCostWithVAT including VAT.'
@@ -88,17 +107,24 @@
 
                 // send email
                 mail($email, "Thanks for your order", $msg);
-                echo "<p>Your frame will cost £ $price plus $postage postage of £$postageCost giving a total price of £$totalCostWithVAT including VAT.</p>";
-            }else{
-                echo "<p>*Email is required</p>";
-            }
+                $timestamp = date("Y-m-d H:i:s");
+                $sql = "INSERT INTO `wsb19173`.`framing_system`(`Width`, `Height`, `Postage`, `E-mail`, `Price (ex vat)`, `Requested`) VALUES "."('$widthInput','$heightInput','$postage','$email','$totalCost','$timestamp');";
 
-            } else {
+                if($conn->query($sql)=== TRUE){
+                    echo "New order inserted "."<br>";
+                } else{
+                    die("Error: ".$sql."<br>".$conn->error);
+                }
+                $conn->close();
+            }
+            echo "<p>Your frame will cost £ $price plus $postage postage of £$postageCost giving a total price of £$totalCostWithVAT including VAT.</p>";
+        }
+             else {
                 echo $error;
             }
         }
 
-         elseif($width != "" || $height != "" || $email != ""){
+         elseif($width != "" || $height != "" || $optIn != ""){
 
             $error = checkIfEmpty($error, $width, "Width");
             $error = checkIfEmpty($error, $height, "Height");
@@ -183,11 +209,11 @@
 
         function calculatePostage($longestEdge, $postage)
         {
-            if ($postage == "economy") {
+            if ($postage == "Economy") {
                 return round((2 * $longestEdge) + 4, 2);
-            } elseif ($postage == "rapid") {
+            } elseif ($postage == "Rapid") {
                 return round((3 * $longestEdge) + 8, 2);
-            } elseif ($postage == "next day") {
+            } elseif ($postage == "Next Day") {
                 return round((5 * $longestEdge) + 12, 2);
             }
         }
