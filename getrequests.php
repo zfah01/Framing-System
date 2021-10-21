@@ -62,7 +62,6 @@ if($password ==="WannaTellMeHow") {
         die ("There was no match");
     }
 
-
     $conn->close();
     echo"</table>\n";
   }
