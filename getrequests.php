@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name = "viewport" content="width-device-width, initial-scale=1.0">
-    <title>Framing System</title>
+    <title>Frame Price Estimator</title>
 </head>
 <body>
 <div>
@@ -46,7 +46,13 @@ if($password ==="WannaTellMeHow") {
     echo"<table><tr><th>Width</th><th>Height</th><th>Postage</th><th>E-mail</th><th>Price (ex vat)</th><th>Requested</th></tr>\n";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo "<tr><td>" . $row["Width"] . "</td><td>" . $row["Height"] . "</td><td>" . $row["Postage"] . "</td><td>" . $row["E-mail"] . "</td><td>" . $row["Price (ex vat)"] . "</td><td>" . $row["Requested"] . "</td></tr>\n";
+            echo "<tr>
+                 <td>" .$row["Width"] .
+                "</td><td>" . $row["Height"] .
+                "</td><td>" . $row["Postage"] .
+                "</td><td>" . $row["E-mail"] .
+                "</td><td>" . $row["Price (ex vat)"] .
+                "</td><td>" . $row["Requested"] . "</td></tr>\n";
 
         }
 
@@ -55,6 +61,8 @@ if($password ==="WannaTellMeHow") {
  else{
         die ("There was no match");
     }
+
+
     $conn->close();
     echo"</table>\n";
   }

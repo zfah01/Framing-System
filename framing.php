@@ -115,6 +115,7 @@
                 } else{
                     die("Error: ".$sql."<br>".$conn->error);
                 }
+
                 $conn->close();
             }
             echo "<p>Your frame will cost £ $price plus $postage postage of £$postageCost giving a total price of £$totalCostWithVAT including VAT.</p>";
